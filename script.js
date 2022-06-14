@@ -51,7 +51,7 @@ async function searchData (search_term){
 const response = await fetch(search_url)
 const jsonResponse = await response.json();
 const data = jsonResponse.results
-console.log(111,jsonResponse)
+console.log("searchData",jsonResponse.results)
 data.forEach(el => displayResults(el));
 console.log("end of searchData",pageNum)
 }
@@ -79,15 +79,18 @@ function clear(){
 
 }
 
-async function trending(pageNum){
+async function trending(pageNum,isShowmoreSearch){
     console.log("start of trending",pageNum)
     
     console.log("trending",pageNum)
-const currentMovies = `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}&language=en-US&page=${pageNum}`;
+let currentMovies = `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}&language=en-US&page=${pageNum}`;
+if (isShowmoreSearch){
+currentMovies = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=en-US&query=${searchTerm}&page=${pageNum}&include_adult=false`;
+}
 const response = await fetch(currentMovies)
 const jsonResponse = await response.json();
 const tdata = jsonResponse.results
-console.log(111,jsonResponse)
+console.log("showMore",jsonResponse.results)
 tdata.forEach(el => displayTrending(el));
 console.log("end of trending",pageNum)
 }
@@ -125,8 +128,11 @@ const moreMovies = document.querySelector(".more")
     //*pageNum++;*//
    //* evt.preventDefault();*//
     pageNum++;
-    trending(pageNum)
+    trending(pageNum,searchTerm.length)
 }
 
+function showMoreSearch (){
+
+}
 
 moreMovies.addEventListener("click",showMore);
